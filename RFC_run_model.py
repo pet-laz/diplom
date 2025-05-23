@@ -9,7 +9,7 @@ all_symptoms = joblib.load('all_symptoms.pkl')
 
 # Загружаем CSV
 df = pd.read_csv("diseases.csv", sep=';')
-
+group_names = set(df['GroupName'].dropna().str.strip().str.lower())
 # Формируем словарь болезнь → симптомы
 disease_symptoms = {}
 
@@ -27,8 +27,9 @@ def get_top_symptoms(disease_list, known_symptoms, n=4):
     counter = Counter()
     for d in disease_list:
         for s in disease_symptoms[d]:
-            if s not in known_symptoms:
-                counter[s] += 1
+            s_lower = s.strip().lower()
+            if s_lower not in known_symptoms and s_lower not in group_names:
+                counter[s_lower] += 1
     return [s for s, _ in counter.most_common(n)]
 
 def predict_disease(selected_symptoms):
@@ -101,11 +102,13 @@ while len(selected_symptoms) < max_choices and rejection_count < 3:
 
 
 # Итоговый вывод
-if selected_symptoms:
+valid_selected = [s for s in selected_symptoms if s in all_symptoms]
+
+if valid_selected:
     print("\n📄 Выбранные симптомы:")
-    for symptom in selected_symptoms:
+    for symptom in valid_selected:
         print(f"- {symptom}")
 
-    predict_disease(selected_symptoms)
-else:
-    print("🚫 Недостаточно данных для предсказания.")
+    predict_disease(valid_selected)
+# else:
+#     print("🚫 Ни один из введённых симптомов не найден в базе. Предсказание невозможно.")

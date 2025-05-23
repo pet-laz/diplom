@@ -1,37 +1,46 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import joblib
-import numpy as np
 
 # Загружаем данные
 data = pd.read_csv("diseases.csv", delimiter=";")
 
-# Составляем список всех уникальных симптомов
+# Собираем все уникальные симптомы и группы
+symptom_columns = [col for col in data.columns if col.startswith("Symptom")]
 all_symptoms = []
-for i in range(3, data.shape[1]):
-    all_symptoms += data.iloc[:, i].dropna().tolist()
+
+for col in symptom_columns:
+    all_symptoms += data[col].dropna().tolist()
+
+# Добавим группы заболеваний как "псевдо-симптомы"
+all_groups = data["GroupName"].unique().tolist()
+all_symptoms += all_groups
+
+# Удаляем дубликаты и сортируем
 all_symptoms = sorted(list(set(all_symptoms)))
 
 # Создаем обучающие данные
 X = []
 y = []
 
-for idx, row in data.iterrows():
-    disease_symptoms = row[3:].dropna().tolist()
-    features = [1 if symptom in disease_symptoms else 0 for symptom in all_symptoms]
+for _, row in data.iterrows():
+    symptoms = row[symptom_columns].dropna().tolist()
+    # Добавляем группу как "симптом"
+    symptoms.append(row["GroupName"])
+    features = [1 if symptom in symptoms else 0 for symptom in all_symptoms]
     X.append(features)
-    y.append(row.iloc[0])  # Название болезни
+    y.append(row["Name"])  # Название болезни
 
-# Обучаем модель Random Forest
+# Обучаем модель
 clf = RandomForestClassifier(
-    n_estimators=200,      # Кол-во деревьев
-    max_depth=15,          # Максимальная глубина
-    class_weight='balanced',  # Учитываем редкие болезни
+    n_estimators=200,
+    max_depth=15,
+    class_weight='balanced',
     random_state=42
 )
 clf.fit(X, y)
 
-# Сохраняем модель и список симптомов
+# Сохраняем модель и признаки
 joblib.dump(clf, 'trained_model.pkl')
 joblib.dump(all_symptoms, 'all_symptoms.pkl')
 
