@@ -34,7 +34,7 @@ plt.show()
 
 # === КРИВАЯ ПРОДАЖ ===
 months = list(range(1, 13))
-sales_per_month = [0, 0, 0, 1, 2, 0, 1, 2, 3, 0, 1, 1]
+sales_per_month = [0, 0, 0, 0, 0, 0, 4, 2, 3, 0, 1, 1]
 cumulative_sales = []
 total = 0
 for sale in sales_per_month:
@@ -68,9 +68,11 @@ for sale in sales_per_month:
     active_clients.append(cumulative_clients)
 
 monthly_revenue = [clients * price_per_month for clients in active_clients]
-monthly_expenses = [40000] * 6 + [20000] * 6
+# monthly_expenses = [40000] * 6 + [20000] * 6
+# Первые 6 месяцев — инвестиционные (по 54 050 руб.), потом эксплуатационные — условно по 13 333 (всего 160 000 / 6)
+monthly_expenses = [54050] * 6 + [26666] * 6  # более точно, чем 40/20
 
-balance = -324300
+balance = -348300
 cumulative_profit = []
 for rev, exp in zip(monthly_revenue, monthly_expenses):
     balance += rev - exp
