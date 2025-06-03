@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 months = list(range(1, 13))
 
 # Продажи и подписка
-sales_per_month = [0, 0, 0, 0, 0, 0, 4, 2, 3, 0, 1, 1]
+sales_per_month = [0, 0, 0, 0, 0, 0, 2, 2, 3, 2, 1, 1]
 price_per_subscription = 30000
 
 # Активные клиенты по месяцам
@@ -19,7 +19,7 @@ revenue = [clients * price_per_subscription for clients in active_clients]
 
 # Расходы:
 # Первые 6 месяцев — инвестиционные (по 54 050 руб.), потом эксплуатационные — условно по 13 333 (всего 160 000 / 6) # или 26 666
-expenses = [54050] * 6 + [26666] * 6  # более точно, чем 40/20
+expenses = [54050] * 6 + [4000] * 6  # более точно, чем 40/20
 
 # Построение графика
 plt.figure(figsize=(10, 6))
