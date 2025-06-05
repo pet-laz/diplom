@@ -65,7 +65,7 @@ max_choices = 7
 
 possible_diseases = list(disease_symptoms.keys())
 
-print("👋 Введите первый симптом (например: 'кашель'):")
+print("\n👋 Введите первый симптом (например: 'кашель'):")
 initial = input("🧠 Ваш выбор: ").strip().lower()
 selected_symptoms.append(initial)
 
