@@ -119,7 +119,7 @@ for cf in cash_flows:
 # Построение графика
 plt.figure(figsize=(10, 5))
 plt.plot(months, cumulative_cash_flow, marker='o', color='forestgreen', label='Кумулятивная прибыль')
-plt.axhline(0, color='red', linestyle='--', label='Точка окупаемости')
+plt.axhline(0, color='gray', linestyle='--', label='Точка окупаемости')
 
 plt.title("Кривая окупаемости проекта", fontsize=14)
 plt.xlabel("Месяц")
